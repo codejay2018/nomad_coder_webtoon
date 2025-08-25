@@ -14,3 +14,10 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+- http 설치하기
+https://pub.dev/ 에서 http 검색
+installing 탭에서 pubspec.yaml 파일 방식으로 설치한다.
+  http: ^1.5.0
+  
