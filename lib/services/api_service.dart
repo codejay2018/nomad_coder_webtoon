@@ -1,19 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:webtoon/models/webtoon_model.dart';
 
 class ApiService {
   final String baseUrl = 'https://webtoon-crawler.nomadcoders.workers.dev';
   final String today = 'today';
 
-  void getTodaysToons() async {
+  Future<List<WebtoonModel>> getTodaysToons() async {
+    List<WebtoonModel> list = [];
     final url = Uri.parse('$baseUrl/$today');
-    debugPrint(url.toString());
     final res = await http.get(url);
     if (res.statusCode == 200) {
-      debugPrint(res.body);
-      return;
+      final List<dynamic> webtoons = jsonDecode(res.body);
+      for (var webtoon in webtoons) {
+        list.add(WebtoonModel.fromJson(webtoon));
+      }
+      return list;
     } else {
-      debugPrint(res.statusCode.toString());
       throw Error();
     }
   }
