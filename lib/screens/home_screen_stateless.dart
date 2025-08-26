@@ -3,7 +3,7 @@ import 'package:webtoon/models/webtoon_model.dart';
 import 'package:webtoon/services/api_service.dart';
 
 class HomeScreenStateless extends StatelessWidget {
-  Future<List<WebtoonModel>> webtoons = ApiService.getTodaysToons();
+  final Future<List<WebtoonModel>> webtoons = ApiService.getTodaysToons();
 
   HomeScreenStateless({super.key});
 
@@ -22,10 +22,19 @@ class HomeScreenStateless extends StatelessWidget {
         future: webtoons,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text("There is data.");
-          } else {
-            return Text("Loading...");
+            return ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                print(index);
+                var title = snapshot.data![index].title;
+                return Text(' $index. $title');
+              },
+              separatorBuilder: (context, index) => SizedBox(width: 20),
+            );
           }
+
+          return Center(child: CircularProgressIndicator());
         },
       ),
     );
