@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webtoon/models/webtoon_model.dart';
 import 'package:webtoon/services/api_service.dart';
+import 'package:webtoon/widgets/webtoon_widget.dart';
 
 class HomeScreenStateless extends StatelessWidget {
   final Future<List<WebtoonModel>> webtoons = ApiService.getTodaysToons();
@@ -9,7 +10,7 @@ class HomeScreenStateless extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(webtoons);
+    // print(webtoons);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -42,32 +43,7 @@ class HomeScreenStateless extends StatelessWidget {
       itemCount: snapshot.data!.length,
       itemBuilder: (context, index) {
         var toon = snapshot.data![index];
-        return Column(
-          children: [
-            Container(
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 15,
-                    offset: Offset(10, 10),
-                    color: Colors.black.withAlpha(100),
-                  ),
-                ],
-              ),
-              width: 250,
-              child: Image.network(
-                toon.thumb,
-                headers: {
-                  "Referer": "https://comic.naver.com", // 네이버 서버가 요구하는 값
-                },
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(toon.title, style: TextStyle(fontSize: 22)),
-          ],
-        );
+        return Webtoon(toon: toon);
       },
       separatorBuilder: (context, index) => SizedBox(width: 20),
     );
