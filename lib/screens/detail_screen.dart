@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:webtoon/models/webtoon_detail_model.dart';
+import 'package:webtoon/models/webtoon_episode_model.dart';
 import 'package:webtoon/models/webtoon_model.dart';
+import 'package:webtoon/services/api_service.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   final WebtoonModel toon;
   const DetailScreen({super.key, required this.toon});
+
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  late Future<WebtoonDetailModel> detail;
+  late Future<List<WebtoonEpisodeModel>> epicodes;
+
+  @override
+  void initState() {
+    detail = ApiService.getToonById(widget.toon.id);
+    epicodes = ApiService.getLatestEpicodesById(widget.toon.id);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +32,7 @@ class DetailScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: Colors.green,
         elevation: 5,
-        title: Text(toon.title, style: TextStyle(fontSize: 24)),
+        title: Text(widget.toon.title, style: TextStyle(fontSize: 24)),
       ),
       body: Column(
         children: [
@@ -22,7 +41,7 @@ class DetailScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Hero(
-                tag: toon.id,
+                tag: widget.toon.id,
                 child: Container(
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
@@ -37,7 +56,7 @@ class DetailScreen extends StatelessWidget {
                   ),
                   width: 250,
                   child: Image.network(
-                    toon.thumb,
+                    widget.toon.thumb,
                     headers: {
                       "Referer": "https://comic.naver.com", // 네이버 서버가 요구하는 값
                     },
