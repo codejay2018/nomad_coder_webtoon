@@ -13,12 +13,12 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  late Future<WebtoonDetailModel> detail;
+  late Future<WebtoonDetailModel> webtoon;
   late Future<List<WebtoonEpisodeModel>> epicodes;
 
   @override
   void initState() {
-    detail = ApiService.getToonById(widget.toon.id);
+    webtoon = ApiService.getToonById(widget.toon.id);
     epicodes = ApiService.getLatestEpicodesById(widget.toon.id);
 
     super.initState();
@@ -64,6 +64,32 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
             ],
+          ),
+          SizedBox(height: 25),
+          FutureBuilder(
+            future: webtoon,
+            builder: (context, snapsht) {
+              if (snapsht.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(snapsht.data!.about, style: TextStyle(fontSize: 16)),
+                      SizedBox(height: 15),
+                      Text(
+                        '${snapsht.data!.genre} / ${snapsht.data!.age}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return Text('...');
+            },
           ),
         ],
       ),
