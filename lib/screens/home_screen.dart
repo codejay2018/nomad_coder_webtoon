@@ -28,8 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(isLoading);
-    print(webtoons);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

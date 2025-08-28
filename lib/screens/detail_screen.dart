@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webtoon/models/webtoon_detail_model.dart';
 import 'package:webtoon/models/webtoon_episode_model.dart';
 import 'package:webtoon/models/webtoon_model.dart';
@@ -16,13 +17,50 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   late Future<WebtoonDetailModel> webtoon;
   late Future<List<WebtoonEpisodeModel>> epicodes;
+  late SharedPreferences pref;
+  bool isLiked = false;
+
+  static String LIKED_TOONS = 'likedToons';
+
+  Future initPrefs() async {
+    pref = await SharedPreferences.getInstance();
+    final likedToons = pref.getStringList(LIKED_TOONS);
+    if (likedToons == null) {
+      await pref.setStringList(LIKED_TOONS, []);
+    } else {
+      if (likedToons.contains(widget.toon.id)) {
+        setState(() {
+          isLiked = true;
+        });
+      }
+    }
+  }
 
   @override
   void initState() {
     webtoon = ApiService.getToonById(widget.toon.id);
     epicodes = ApiService.getLatestEpicodesById(widget.toon.id);
+    initPrefs();
 
     super.initState();
+  }
+
+  onHeartTap() async {
+    final linkedToons = pref.getStringList(LIKED_TOONS);
+
+    if (linkedToons != null) {
+      if (isLiked) {
+        linkedToons.remove(widget.toon.id);
+      } else {
+        linkedToons.add(widget.toon.id);
+      }
+
+      await pref.setStringList(LIKED_TOONS, linkedToons);
+
+      setState(() {
+        isLiked = !isLiked;
+      });
+    }
   }
 
   @override
@@ -34,6 +72,12 @@ class _DetailScreenState extends State<DetailScreen> {
         foregroundColor: Colors.green,
         elevation: 5,
         title: Text(widget.toon.title, style: TextStyle(fontSize: 24)),
+        actions: [
+          IconButton(
+            onPressed: onHeartTap,
+            icon: Icon(isLiked ? Icons.favorite : Icons.favorite_outline),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -25,3 +25,8 @@ installing 탭에서 pubspec.yaml 파일 방식으로 설치한다.
 https://pub.dev/ 에서 url launcher 검색
 installing 탭에서 pubspec.yaml 파일 방식으로 설치한다.
   url_launcher: ^6.3.2
+
+- shared_preference 설치하기
+https://pub.dev/ 에서 검색
+installing 탭에서 pubspec.yaml 파일 방식으로 설치한다.
+  shared_preferences: ^2.5.3
