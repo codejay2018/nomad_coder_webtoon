@@ -20,4 +20,8 @@ samples, guidance on mobile development, and a full API reference.
 https://pub.dev/ 에서 http 검색
 installing 탭에서 pubspec.yaml 파일 방식으로 설치한다.
   http: ^1.5.0
-  
+
+- url_launcher 설치하기
+https://pub.dev/ 에서 url launcher 검색
+installing 탭에서 pubspec.yaml 파일 방식으로 설치한다.
+  url_launcher: ^6.3.2
