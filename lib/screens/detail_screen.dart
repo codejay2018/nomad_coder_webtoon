@@ -34,64 +34,107 @@ class _DetailScreenState extends State<DetailScreen> {
         elevation: 5,
         title: Text(widget.toon.title, style: TextStyle(fontSize: 24)),
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 50),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(50),
+          child: Column(
             children: [
-              Hero(
-                tag: widget.toon.id,
-                child: Container(
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 15,
-                        offset: Offset(10, 10),
-                        color: Colors.black.withAlpha(100),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Hero(
+                    tag: widget.toon.id,
+                    child: Container(
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 15,
+                            offset: Offset(10, 10),
+                            color: Colors.black.withAlpha(100),
+                          ),
+                        ],
                       ),
-                    ],
+                      width: 250,
+                      child: Image.network(
+                        widget.toon.thumb,
+                        headers: {
+                          "Referer":
+                              "https://comic.naver.com", // 네이버 서버가 요구하는 값
+                        },
+                      ),
+                    ),
                   ),
-                  width: 250,
-                  child: Image.network(
-                    widget.toon.thumb,
-                    headers: {
-                      "Referer": "https://comic.naver.com", // 네이버 서버가 요구하는 값
-                    },
-                  ),
-                ),
+                ],
+              ),
+              SizedBox(height: 25),
+              FutureBuilder(
+                future: webtoon,
+                builder: (context, snapsht) {
+                  if (snapsht.hasData) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          snapsht.data!.about,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          '${snapsht.data!.genre} / ${snapsht.data!.age}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return Text('...');
+                },
+              ),
+              SizedBox(height: 50),
+              FutureBuilder(
+                future: epicodes,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+                      children: [
+                        for (var episode in snapshot.data!)
+                          Container(
+                            margin: EdgeInsets.only(bottom: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.green[100],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 20,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    episode.title,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Icon(Icons.chevron_right_rounded),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  }
+                  return Container();
+                },
               ),
             ],
           ),
-          SizedBox(height: 25),
-          FutureBuilder(
-            future: webtoon,
-            builder: (context, snapsht) {
-              if (snapsht.hasData) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(snapsht.data!.about, style: TextStyle(fontSize: 16)),
-                      SizedBox(height: 15),
-                      Text(
-                        '${snapsht.data!.genre} / ${snapsht.data!.age}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-              return Text('...');
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
